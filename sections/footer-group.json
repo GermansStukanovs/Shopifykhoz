@@ -25,13 +25,17 @@
             "heading": "Our mission",
             "subtext": "<p>Share contact information, store details, and brand content with your customers.<\/p>"
           }
+        },
+       "gift-card-balance": {
+          "type": "gift_card_balance",
+          "settings": {
+            "heading": "Check Gift Card Balance",
+            "subtext": "<p>Enter your gift card code to check your available balance.</p>"
+          }
         }
       },
-      "block_order": [
-        "footer-0",
-        "footer-1",
-        "footer-2"
-      ],
+      "block_order": ["footer-0", "footer-1", "footer-2", "gift-card-balance"],
+
       "settings": {
         "color_scheme": "scheme-1",
         "newsletter_enable": true,
