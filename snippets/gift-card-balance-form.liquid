@@ -1,0 +1,116 @@
+<div class="gift-card-balance-form" data-gift-card-form>
+  {% if title != blank %}
+    <h3 class="gift-card-balance-form__heading" style="text-align: {{ text_alignment | default: 'center' }};">
+      {{ title }}
+    </h3>
+  {% endif %}
+
+  {% if description != blank %}
+    <div class="gift-card-balance-form__description" style="text-align: {{ text_alignment | default: 'center' }};">
+      {{ description }}
+    </div>
+  {% endif %}
+
+  <form class="gift-card-balance-form__form" style="text-align: {{ text_alignment | default: 'center' }};">
+    <div class="field">
+      <input
+        type="text"
+        id="GiftCardCode-{{ section.id }}"
+        name="gift_card_code"
+        class="field__input"
+        placeholder="{{ input_placeholder | default: 'Enter gift card code' }}"
+        autocomplete="off"
+        required
+      >
+      <label class="field__label" for="GiftCardCode-{{ section.id }}">
+        {{ input_label | default: 'Gift Card Code' }}
+      </label>
+    </div>
+
+    <button type="submit" class="button button--primary">
+      {{ button_text | default: 'Check Balance' }}
+    </button>
+  </form>
+
+  <div class="gift-card-balance-form__result" style="display: none;">
+    <div class="gift-card-balance-form__success" style="display: none;">
+      <h4>Gift Card Balance</h4>
+      <p>Available balance: <span class="gift-card-balance-form__amount"></span></p>
+      <p class="gift-card-balance-form__expiry-container" style="display: none;">
+        Expires on: <span class="gift-card-balance-form__expiry"></span>
+      </p>
+    </div>
+
+    <div class="gift-card-balance-form__error" style="display: none;">
+      <p class="gift-card-balance-form__error-message"></p>
+    </div>
+  </div>
+
+  <div class="gift-card-balance-form__loading" style="display: none;">
+    <div class="loading-overlay__spinner">
+      <svg aria-hidden="true" focusable="false" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+        <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<style>
+  .gift-card-balance-form {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .gift-card-balance-form__heading {
+    margin-bottom: 1rem;
+  }
+
+  .gift-card-balance-form__description {
+    margin-bottom: 1.5rem;
+  }
+
+  .gift-card-balance-form__form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    justify-content: {{ text_alignment | default: 'center' }};
+  }
+
+  .gift-card-balance-form__form .field {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .gift-card-balance-form__result {
+    margin-top: 1.5rem;
+  }
+
+  .gift-card-balance-form__success {
+    background-color: rgba(var(--color-success), 0.1);
+    padding: 1rem;
+    border-radius: 4px;
+    border-left: 3px solid rgb(var(--color-success));
+  }
+
+  .gift-card-balance-form__error {
+    background-color: rgba(var(--color-error), 0.1);
+    padding: 1rem;
+    border-radius: 4px;
+    border-left: 3px solid rgb(var(--color-error));
+  }
+
+  .gift-card-balance-form__amount {
+    font-weight: bold;
+  }
+
+  @media screen and (max-width: 749px) {
+    .gift-card-balance-form__form {
+      flex-direction: column;
+    }
+
+    .gift-card-balance-form__form .button {
+      width: 100%;
+    }
+  }
+</style>

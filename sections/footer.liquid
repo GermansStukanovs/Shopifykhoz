@@ -1,282 +1,279 @@
-{% comment %}theme-check-disable UndefinedObject{% endcomment %}
-{{ 'section-footer.css' | asset_url | stylesheet_tag }}
-{{ 'component-newsletter.css' | asset_url | stylesheet_tag }}
-{{ 'component-list-menu.css' | asset_url | stylesheet_tag }}
-{{ 'component-list-payment.css' | asset_url | stylesheet_tag }}
-{{ 'component-list-social.css' | asset_url | stylesheet_tag }}
-
-{%- style -%}
-  .footer {
-    margin-top: {{ section.settings.margin_top | times: 0.75 | round: 0 }}px;
-  }
-
-  .section-{{ section.id }}-padding {
-    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
-    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
-  }
-
-  @media screen and (min-width: 750px) {
-    .footer {
-      margin-top: {{ section.settings.margin_top }}px;
-    }
-
-    .section-{{ section.id }}-padding {
-      padding-top: {{ section.settings.padding_top }}px;
-      padding-bottom: {{ section.settings.padding_bottom }}px;
-    }
-  }
-{%- endstyle -%}
-
-<footer class="footer color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
-  {%- liquid
-    assign has_social_icons = true
-    if settings.social_facebook_link == blank and settings.social_instagram_link == blank and settings.social_youtube_link == blank and settings.social_tiktok_link == blank and settings.social_twitter_link == blank and settings.social_pinterest_link == blank and settings.social_snapchat_link == blank and settings.social_tumblr_link == blank and settings.social_vimeo_link == blank
-      assign has_social_icons = false
-    endif
-
-    if settings.brand_image == blank and settings.brand_headline == blank and settings.brand_description == blank
-      assign brand_empty = true
-    endif
-
-    if section.blocks.size == 1 and section.blocks[0].type == 'brand_information' and brand_empty and has_social_icons == false and section.settings.newsletter_enable == false and section.settings.enable_follow_on_shop == false
-      assign only_empty_brand = true
-    endif
-  -%}
-  {%- if section.blocks.size > 0
-    or section.settings.newsletter_enable
-    or section.settings.show_social
-    and has_social_icons == true
-    or section.settings.enable_follow_on_shop
-  -%}
-    {%- unless only_empty_brand -%}
-      <div class="footer__content-top page-width">
-        {%- if section.blocks.size > 0 -%}
-          {%- liquid
-            if section.blocks.size == 9
-              assign footer_grid_class = 'grid--3-col-tablet'
-            elsif section.blocks.size > 6
-              assign footer_grid_class = 'grid--4-col-desktop'
-            elsif section.blocks.size > 4
-              assign footer_grid_class = 'grid--3-col-tablet'
-            endif
-          -%}
-          <div
-            class="footer__blocks-wrapper grid grid--1-col grid--2-col grid--4-col-tablet {{ footer_grid_class }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-            {% if settings.animations_reveal_on_scroll %}
-              data-cascade
-            {% endif %}
-          >
-            {%- for block in section.blocks -%}
-              <div
-                class="footer-block grid__item{% if block.type == 'link_list' %} footer-block--menu{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-                {{ block.shopify_attributes }}
-                {% if settings.animations_reveal_on_scroll %}
-                  data-cascade
-                  style="--animation-order: {{ forloop.index }};"
-                {% endif %}
-              >
-                {%- if block.settings.heading != blank -%}
-                  <h2 class="footer-block__heading inline-richtext">{{- block.settings.heading -}}</h2>
-                {%- endif -%}
-
-                {%- case block.type -%}
-                  {%- when '@app' -%}
-                    {% render block %}
-                  {%- when 'text' -%}
-                    <div class="footer-block__details-content rte">
-                      {{ block.settings.subtext }}
-                    </div>
-                  {%- when 'link_list' -%}
-                    {%- if block.settings.menu != blank -%}
-                      <ul class="footer-block__details-content list-unstyled">
-                        {%- for link in block.settings.menu.links -%}
-                          <li>
-                            <a
-                              href="{{ link.url }}"
-                              class="link link--text list-menu__item list-menu__item--link{% if link.active %} list-menu__item--active{% endif %}"
-                            >
-                              {{ link.title | escape }}
-                            </a>
-                          </li>
-                        {%- endfor -%}
-                      </ul>
-                    {%- endif -%}
-                  {%- when 'brand_information' -%}
-                    <div class="footer-block__brand-info">
-                      {%- if settings.brand_image != blank -%}
-                        {%- assign brand_image_height = settings.brand_image_width
-                          | divided_by: settings.brand_image.aspect_ratio
-                        -%}
-                        <div
-                          class="footer-block__image-wrapper"
-                          style="max-width: min(100%, {{ settings.brand_image_width }}px);"
-                        >
-                          {{
-                            settings.brand_image
-                            | image_url: width: 1100
-                            | image_tag:
-                              loading: 'lazy',
-                              widths: '50, 100, 150, 200, 300, 400, 550, 800, 1100',
-                              height: brand_image_height,
-                              width: settings.brand_image_width
-                          }}
-                        </div>
-                      {%- endif -%}
-                      {%- if settings.brand_headline != blank -%}
-                        <h2 class="footer-block__heading rte">{{ settings.brand_headline }}</h2>
-                      {%- endif -%}
-                      {%- if settings.brand_description != blank -%}
-                        <div class="rte">{{ settings.brand_description }}</div>
-                      {%- endif -%}
-                      {%- if block.settings.show_social and has_social_icons -%}
-                        {%- render 'social-icons', class: 'footer__list-social' -%}
-                      {%- endif -%}
-                    </div>
-                  {%- when 'image' -%}
-                    <div class="footer-block__details-content footer-block-image {{ block.settings.alignment }}">
-                      {%- if block.settings.image != blank -%}
-                        {%- assign image_size_2x = block.settings.image_width | times: 2 | at_most: 5760 -%}
-                        <div
-                          class="footer-block__image-wrapper"
-                          style="max-width: min(100%, {{ block.settings.image_width }}px);"
-                        >
-                          <img
-                            srcset="{{ block.settings.image | image_url: width: block.settings.image_width }}, {{ block.settings.image | image_url: width: image_size_2x }} 2x"
-                            src="{{ block.settings.image | image_url: width: 760 }}"
-                            alt="{{ block.settings.image.alt | escape }}"
-                            loading="lazy"
-                            width="{{ block.settings.image.width }}"
-                            height="{{ block.settings.image.height }}"
-                          >
-                        </div>
-                      {%- else -%}
-                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
-                      {%- endif -%}
-                    </div>
-                {%- endcase -%}
-              </div>
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-
+<footer class="footer color-{{ section.settings.color_scheme }}">
+  <div class="footer__content-top page-width">
+    <div class="footer__blocks-wrapper grid grid--1-col grid--2-col grid--4-col-tablet">
+      {%- for block in section.blocks -%}
         <div
-          class="footer-block--newsletter{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-          {% if settings.animations_reveal_on_scroll %}
-            data-cascade
-          {% endif %}
+          class="footer-block grid__item{% if block.type == 'gift_card_balance' %} footer-block--gift-card{% endif %}"
+          {{ block.shopify_attributes }}
         >
-          {%- if section.settings.newsletter_enable -%}
-            <div class="footer-block__newsletter">
-              {%- if section.settings.newsletter_heading != blank -%}
-                <h2 class="footer-block__heading inline-richtext">{{ section.settings.newsletter_heading }}</h2>
+          {%- if block.settings.heading != blank -%}
+            <h2 class="footer-block__heading">{{ block.settings.heading | escape }}</h2>
+          {%- endif -%}
+
+          {%- case block.type -%}
+            {%- when 'text' -%}
+              <div class="footer-block__details">{{ block.settings.subtext }}</div>
+            {%- when 'link_list' -%}
+              {%- if block.settings.menu != blank -%}
+                <ul class="footer-block__details-content list-unstyled">
+                  {%- for link in block.settings.menu.links -%}
+                    <li>
+                      <a
+                        href="{{ link.url }}"
+                        class="link link--text list-menu__item list-menu__item--link{% if link.active %} list-menu__item--active{% endif %}"
+                      >
+                        {{ link.title }}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
               {%- endif -%}
-              {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter newsletter-form' -%}
-                <input type="hidden" name="contact[tags]" value="newsletter">
-                <div class="newsletter-form__field-wrapper">
+            {%- when 'gift_card_balance' -%}
+              <div class="footer-block__details">{{ block.settings.subtext }}</div>
+              <div class="footer-block__gift-card-form">
+                <div id="FooterGiftCardForm" class="gift-card-balance__form">
                   <div class="field">
                     <input
-                      id="NewsletterForm--{{ section.id }}"
-                      type="email"
-                      name="contact[email]"
+                      type="text"
+                      id="FooterGiftCardCode"
+                      name="gift_card_code"
                       class="field__input"
-                      value="{{ form.email }}"
-                      aria-required="true"
-                      autocorrect="off"
-                      autocapitalize="off"
-                      autocomplete="email"
-                      {% if form.errors %}
-                        autofocus
-                        aria-invalid="true"
-                        aria-describedby="ContactFooter-error"
-                      {% elsif form.posted_successfully? %}
-                        aria-describedby="ContactFooter-success"
-                      {% endif %}
-                      placeholder="{{ 'newsletter.label' | t }}"
+                      placeholder="Enter gift card code"
+                      autocomplete="off"
                       required
                     >
-                    <label class="field__label" for="NewsletterForm--{{ section.id }}">
-                      {{ 'newsletter.label' | t }}
-                    </label>
-                    <button
-                      type="submit"
-                      class="newsletter-form__button field__button"
-                      name="commit"
-                      id="Subscribe"
-                      aria-label="{{ 'newsletter.button_label' | t }}"
-                    >
-                      <span class="svg-wrapper">
-                        {{- 'icon-arrow.svg' | inline_asset_content -}}
-                      </span>
-                    </button>
+                    <label class="field__label" for="FooterGiftCardCode"> Gift Card Code </label>
                   </div>
-                  {%- if form.errors -%}
-                    <small class="newsletter-form__message form__message" id="ContactFooter-error">
-                      <span class="svg-wrapper">
-                        {{- 'icon-error.svg' | inline_asset_content -}}
-                      </span>
-                      {{- form.errors.translated_fields.email | capitalize }}
-                      {{ form.errors.messages.email -}}
-                    </small>
-                  {%- endif -%}
-                </div>
-                {%- if form.posted_successfully? -%}
-                  <h3
-                    class="newsletter-form__message newsletter-form__message--success form__message"
-                    id="ContactFooter-success"
-                    tabindex="-1"
-                    autofocus
+
+                  <button
+                    type="button"
+                    id="FooterGiftCardButton"
+                    class="button button--primary button--small"
+                    {% if block.settings.gift_card_page != blank %}
+                      data-gift-card-page="{{ block.settings.gift_card_page }}"
+                    {% endif %}
                   >
-                    <span class="svg-wrapper">
-                      {{- 'icon-success.svg' | inline_asset_content -}}
-                    </span>
-                    {{- 'newsletter.success' | t }}
-                  </h3>
-                {%- endif -%}
-              {%- endform -%}
-            </div>
-          {%- endif -%}
+                    Check Balance
+                  </button>
+                </div>
 
-          {%- if shop.features.follow_on_shop? and section.settings.enable_follow_on_shop -%}
-            <div class="footer__follow-on-shop">
-              {{ shop | login_button: action: 'follow' }}
-            </div>
-          {%- endif -%}
-
-          {%- if section.settings.show_social and has_social_icons -%}
-            {%- render 'social-icons', class: 'footer__list-social' -%}
-          {%- endif -%}
+                <div id="FooterGiftCardResult" class="gift-card-balance__result" style="display: none;">
+                  <div id="FooterGiftCardResultInfo" class="gift-card-balance__info" style="display: none;">
+                    <p>{{ block.settings.info_message }}</p>
+                    {% if block.settings.gift_card_page != blank %}
+                      <p>
+                        <a href="{{ block.settings.gift_card_page }}" class="link">{{ block.settings.link_text }}</a>
+                      </p>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+          {%- endcase -%}
         </div>
-      </div>
-    {%- endunless -%}
-  {%- endif -%}
+      {%- endfor -%}
+    </div>
 
-  <div
-    class="footer__content-bottom{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-    {% if settings.animations_reveal_on_scroll %}
-      data-cascade
-    {% endif %}
-  >
+    {%- if section.settings.newsletter_enable -%}
+      <div class="footer-block--newsletter">
+        {%- if section.settings.newsletter_heading != blank -%}
+          <h2 class="footer-block__heading">{{ section.settings.newsletter_heading | escape }}</h2>
+        {%- endif -%}
+        {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter newsletter-form' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <div class="newsletter-form__field-wrapper">
+            <div class="field">
+              <input
+                id="NewsletterForm--{{ section.id }}"
+                type="email"
+                name="contact[email]"
+                class="field__input"
+                value="{{ form.email }}"
+                aria-required="true"
+                autocorrect="off"
+                autocapitalize="off"
+                autocomplete="email"
+                {% if form.errors %}
+                  autofocus
+                  aria-invalid="true"
+                  aria-describedby="ContactFooter-error"
+                {% elsif form.posted_successfully? %}
+                  aria-describedby="ContactFooter-success"
+                {% endif %}
+                placeholder="{{ 'newsletter.label' | t }}"
+                required
+              >
+              <label class="field__label" for="NewsletterForm--{{ section.id }}">
+                {{ 'newsletter.label' | t }}
+              </label>
+            </div>
+            {%- if form.errors -%}
+              <small class="newsletter-form__message form__message" id="ContactFooter-error">
+                {%- for error in form.errors -%}
+                  <span>{{ error }}</span>
+                {%- endfor -%}
+              </small>
+            {%- endif -%}
+          </div>
+          <button type="submit" class="button button--primary newsletter-form__button" name="commit">
+            {{ 'newsletter.button_label' | t }}
+          </button>
+          {%- if form.posted_successfully? -%}
+            <p
+              class="newsletter-form__message newsletter-form__message--success form__message"
+              id="ContactFooter-success"
+              tabindex="-1"
+              autofocus
+            >
+              {{ 'newsletter.success' | t }}
+            </p>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="footer__content-bottom">
     <div class="footer__content-bottom-wrapper page-width">
-      <div class="footer__column footer__localization isolate">
+      <div class="footer__column footer__localization">
         {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
+          <noscript>
+            {%- form 'localization', id: 'FooterCountryFormNoScript', class: 'localization-form' -%}
+              <div class="localization-form__select">
+                <h2 class="visually-hidden" id="FooterCountryLabelNoScript">{{ 'localization.country_label' | t }}</h2>
+                <select
+                  class="localization-selector link"
+                  name="country_code"
+                  aria-labelledby="FooterCountryLabelNoScript"
+                >
+                  {%- for country in localization.available_countries -%}
+                    <option
+                      value="{{ country.iso_code }}"
+                      {%- if country.iso_code == localization.country.iso_code %}
+                        selected
+                      {% endif %}
+                    >
+                      {{ country.name }} ({{ country.currency.iso_code }}
+                      {{ country.currency.symbol }})
+                    </option>
+                  {%- endfor -%}
+                </select>
+                {% comment %} {% render 'icon-caret' %} {% endcomment %}
+              </div>
+              <button class="button button--tertiary">{{ 'localization.update_country' | t }}</button>
+            {%- endform -%}
+          </noscript>
+
           <localization-form>
             {%- form 'localization', id: 'FooterCountryForm', class: 'localization-form' -%}
-              <div>
+              <div class="no-js-hidden">
                 <h2 class="caption-large text-body" id="FooterCountryLabel">{{ 'localization.country_label' | t }}</h2>
-                {%- render 'country-localization', localPosition: 'FooterCountry' -%}
+                <div class="disclosure">
+                  <button
+                    type="button"
+                    class="disclosure__button localization-form__select localization-selector link link--text caption-large"
+                    aria-expanded="false"
+                    aria-controls="FooterCountryList"
+                    aria-describedby="FooterCountryLabel"
+                  >
+                    {{ localization.country.name }} ({{ localization.country.currency.iso_code }}
+                    {{ localization.country.currency.symbol }})
+                    {% comment %} {% render 'icon-caret' %} {% endcomment %}
+                  </button>
+                  <div class="disclosure__list-wrapper" hidden>
+                    <ul id="FooterCountryList" role="list" class="disclosure__list list-unstyled">
+                      {%- for country in localization.available_countries -%}
+                        <li class="disclosure__item" tabindex="-1">
+                          <a
+                            class="link link--text disclosure__link caption-large{% if country.iso_code == localization.country.iso_code %} disclosure__link--active{% endif %} focus-inset"
+                            href="#"
+                            {% if country.iso_code == localization.country.iso_code %}
+                              aria-current="true"
+                            {% endif %}
+                            data-value="{{ country.iso_code }}"
+                          >
+                            {{ country.name }} ({{ country.currency.iso_code }}
+                            {{ country.currency.symbol }})
+                          </a>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+                <input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">
               </div>
             {%- endform -%}
           </localization-form>
         {%- endif -%}
 
         {%- if section.settings.enable_language_selector and localization.available_languages.size > 1 -%}
+          <noscript>
+            {%- form 'localization', id: 'FooterLanguageFormNoScript', class: 'localization-form' -%}
+              <div class="localization-form__select">
+                <h2 class="visually-hidden" id="FooterLanguageLabelNoScript">
+                  {{ 'localization.language_label' | t }}
+                </h2>
+                <select
+                  class="localization-selector link"
+                  name="locale_code"
+                  aria-labelledby="FooterLanguageLabelNoScript"
+                >
+                  {%- for language in localization.available_languages -%}
+                    <option
+                      value="{{ language.iso_code }}"
+                      lang="{{ language.iso_code }}"
+                      {%- if language.iso_code == localization.language.iso_code %}
+                        selected
+                      {% endif %}
+                    >
+                      {{ language.endonym_name | capitalize }}
+                    </option>
+                  {%- endfor -%}
+                </select>
+                {% comment %} {% render 'icon-caret' %} {% endcomment %}
+              </div>
+              <button class="button button--tertiary">{{ 'localization.update_language' | t }}</button>
+            {%- endform -%}
+          </noscript>
+
           <localization-form>
             {%- form 'localization', id: 'FooterLanguageForm', class: 'localization-form' -%}
-              <div>
+              <div class="no-js-hidden">
                 <h2 class="caption-large text-body" id="FooterLanguageLabel">
                   {{ 'localization.language_label' | t }}
                 </h2>
-                {%- render 'language-localization', localPosition: 'FooterLanguage' -%}
+                <div class="disclosure">
+                  <button
+                    type="button"
+                    class="disclosure__button localization-form__select localization-selector link link--text caption-large"
+                    aria-expanded="false"
+                    aria-controls="FooterLanguageList"
+                    aria-describedby="FooterLanguageLabel"
+                  >
+                    {{ localization.language.endonym_name | capitalize }}
+                    {% comment %} {% render 'icon-caret' %} {% endcomment %}
+                  </button>
+                  <div class="disclosure__list-wrapper" hidden>
+                    <ul id="FooterLanguageList" role="list" class="disclosure__list list-unstyled">
+                      {%- for language in localization.available_languages -%}
+                        <li class="disclosure__item" tabindex="-1">
+                          <a
+                            class="link link--text disclosure__link caption-large{% if language.iso_code == localization.language.iso_code %} disclosure__link--active{% endif %} focus-inset"
+                            href="#"
+                            hreflang="{{ language.iso_code }}"
+                            lang="{{ language.iso_code }}"
+                            {% if language.iso_code == localization.language.iso_code %}
+                              aria-current="true"
+                            {% endif %}
+                            data-value="{{ language.iso_code }}"
+                          >
+                            {{ language.endonym_name | capitalize }}
+                          </a>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+                <input type="hidden" name="locale_code" value="{{ localization.language.iso_code }}">
               </div>
             {%- endform -%}
           </localization-form>
@@ -295,71 +292,139 @@
             </ul>
           </div>
         {%- endif -%}
-      </div>
-    </div>
-    <div class="footer__content-bottom-wrapper page-width{% if section.settings.enable_country_selector == false and section.settings.enable_language_selector == false %} footer__content-bottom-wrapper--center{% endif %}">
-      <div class="footer__copyright caption">
-        <small class="copyright__content"
-          >&copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url -}}
-        </small>
-        <small class="copyright__content">{{ powered_by_link }}</small>
-        {%- if section.settings.show_policy -%}
-          <ul class="policies list-unstyled">
-            {%- for policy in shop.policies -%}
-              {%- if policy != blank -%}
-                <li>
-                  <small class="copyright__content"
-                    ><a href="{{ policy.url }}">{{ policy.title | escape }}</a></small
-                  >
-                </li>
-              {%- endif -%}
-            {%- endfor -%}
-          </ul>
-        {%- endif -%}
+        <div class="footer__copyright caption">
+          <small class="copyright__content"
+            >&copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url -}}
+          </small>
+          <small class="copyright__content">{{ powered_by_link }}</small>
+          {%- if section.settings.show_policy -%}
+            <ul class="policies list-unstyled">
+              {%- for policy in shop.policies -%}
+                {%- if policy != empty -%}
+                  <li>
+                    <small
+                      ><a href="{{ policy.url }}">{{ policy.title }}</a></small
+                    >
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
       </div>
     </div>
   </div>
 </footer>
+
+<style>
+  .footer-block--gift-card {
+    margin-top: 1rem;
+  }
+
+  .footer-block__gift-card-form {
+    margin-top: 1rem;
+  }
+
+  .footer-block__gift-card-form .field {
+    margin-bottom: 1rem;
+  }
+
+  .gift-card-balance__result {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .gift-card-balance__info {
+    padding: 0.75rem;
+    background-color: rgba(var(--color-foreground), 0.04);
+    border-radius: 4px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .footer-block__gift-card-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-block__gift-card-form .field {
+      flex: 1;
+      min-width: 150px;
+      margin-bottom: 0;
+    }
+  }
+</style>
+
+<script>
+  class FooterGiftCardBalanceChecker {
+    constructor() {
+      this.form = document.getElementById('FooterGiftCardForm');
+      if (!this.form) return;
+
+      this.button = document.getElementById('FooterGiftCardButton');
+      this.resultContainer = document.getElementById('FooterGiftCardResult');
+      this.infoContainer = document.getElementById('FooterGiftCardResultInfo');
+
+      if (this.button) {
+        this.button.addEventListener('click', this.onClickHandler.bind(this));
+      }
+    }
+
+    onClickHandler(event) {
+      event.preventDefault();
+
+      const giftCardCode = document.getElementById('FooterGiftCardCode').value.trim();
+
+      if (!giftCardCode) {
+        alert('Please enter a gift card code.');
+        return;
+      }
+
+      // If we have a gift card page URL, redirect to it with the code
+      const giftCardPageUrl = this.button.getAttribute('data-gift-card-page');
+      if (giftCardPageUrl) {
+        window.location.href = `${giftCardPageUrl}?code=${encodeURIComponent(giftCardCode)}`;
+        return;
+      }
+
+      // Otherwise show the info message
+      this.showInfo();
+    }
+
+    showInfo() {
+      if (this.resultContainer && this.infoContainer) {
+        this.resultContainer.style.display = 'block';
+        this.infoContainer.style.display = 'block';
+      }
+    }
+  }
+
+  // Initialize the gift card balance checker when the DOM is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    new FooterGiftCardBalanceChecker();
+  });
+</script>
 
 {% schema %}
 {
   "name": "t:sections.footer.name",
   "blocks": [
     {
-      "type": "@app"
-    },
-    {
       "type": "link_list",
       "name": "t:sections.footer.blocks.link_list.name",
       "settings": [
         {
-          "type": "inline_richtext",
+          "type": "text",
           "id": "heading",
-          "default": "t:sections.footer.blocks.link_list.settings.heading.default",
+          "default": "Quick links",
           "label": "t:sections.footer.blocks.link_list.settings.heading.label"
         },
         {
           "type": "link_list",
           "id": "menu",
           "default": "footer",
-          "label": "t:sections.footer.blocks.link_list.settings.menu.label"
-        }
-      ]
-    },
-    {
-      "type": "brand_information",
-      "name": "t:sections.footer.blocks.brand_information.name",
-      "settings": [
-        {
-          "type": "paragraph",
-          "content": "t:sections.footer.blocks.brand_information.settings.paragraph.content"
-        },
-        {
-          "type": "checkbox",
-          "id": "show_social",
-          "default": true,
-          "label": "t:sections.footer.blocks.brand_information.settings.show_social.label",
-          "info": "t:sections.footer.blocks.brand_information.settings.show_social.info"
+          "label": "t:sections.footer.blocks.link_list.settings.menu.label",
+          "info": "t:sections.footer.blocks.link_list.settings.menu.info"
         }
       ]
     },
@@ -368,57 +433,62 @@
       "name": "t:sections.footer.blocks.text.name",
       "settings": [
         {
-          "type": "inline_richtext",
+          "type": "text",
           "id": "heading",
-          "default": "t:sections.footer.blocks.text.settings.heading.default",
+          "default": "Heading",
           "label": "t:sections.footer.blocks.text.settings.heading.label"
         },
         {
           "type": "richtext",
           "id": "subtext",
-          "default": "t:sections.footer.blocks.text.settings.subtext.default",
+          "default": "<p>Share contact information, store details, and brand content with your customers.</p>",
           "label": "t:sections.footer.blocks.text.settings.subtext.label"
         }
       ]
     },
     {
-      "type": "image",
-      "name": "Image",
+      "type": "gift_card_balance",
+      "name": "Gift Card Balance",
+      "limit": 1,
       "settings": [
         {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
+          "type": "text",
+          "id": "heading",
+          "default": "Check Gift Card Balance",
+          "label": "Heading"
         },
         {
-          "type": "range",
-          "id": "image_width",
-          "min": 50,
-          "max": 550,
-          "step": 5,
-          "unit": "px",
-          "label": "Width",
-          "default": 100
+          "type": "richtext",
+          "id": "subtext",
+          "default": "<p>Enter your gift card code to check your available balance.</p>",
+          "label": "Description"
         },
         {
-          "type": "select",
-          "id": "alignment",
-          "label": "Alignment",
-          "options": [
-            {
-              "value": "",
-              "label": "Left"
-            },
-            {
-              "value": "center",
-              "label": "Center"
-            },
-            {
-              "value": "right",
-              "label": "Right"
-            }
-          ],
-          "default": "center"
+          "type": "checkbox",
+          "id": "use_redirect",
+          "default": false,
+          "label": "Redirect to gift card page",
+          "info": "When enabled, users will be redirected to the gift card page with their code"
+        },
+        {
+          "type": "url",
+          "id": "gift_card_page",
+          "label": "Gift card page",
+          "info": "Page where customers can check their gift card balance"
+        },
+        {
+          "type": "text",
+          "id": "info_message",
+          "default": "To check your gift card balance, please visit our gift card page or contact customer service.",
+          "label": "Information message",
+          "info": "Message shown when not using redirect"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "default": "Go to gift card page",
+          "label": "Link text",
+          "info": "Text for the link to the gift card page"
         }
       ]
     }
@@ -442,42 +512,47 @@
       "label": "t:sections.footer.settings.newsletter_enable.label"
     },
     {
-      "type": "inline_richtext",
+      "type": "text",
       "id": "newsletter_heading",
-      "default": "t:sections.footer.settings.newsletter_heading.default",
+      "default": "Subscribe to our emails",
       "label": "t:sections.footer.settings.newsletter_heading.label"
     },
     {
       "type": "header",
-      "content": "t:sections.footer.settings.header__9.content"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_follow_on_shop",
-      "default": true,
-      "label": "t:sections.footer.settings.enable_follow_on_shop.label",
-      "info": "t:sections.footer.settings.enable_follow_on_shop.info"
+      "content": "t:sections.footer.settings.header__2.content",
+      "info": "t:sections.footer.settings.header__2.info"
     },
     {
       "type": "checkbox",
       "id": "show_social",
       "default": true,
-      "label": "t:sections.footer.settings.show_social.label",
-      "info": "t:sections.footer.settings.show_social.info"
+      "label": "t:sections.footer.settings.show_social.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.footer.settings.header__3.content",
+      "info": "t:sections.footer.settings.header__3.info"
     },
     {
       "type": "checkbox",
       "id": "enable_country_selector",
       "default": true,
-      "label": "t:sections.footer.settings.enable_country_selector.label",
-      "info": "t:sections.footer.settings.enable_country_selector.info"
+      "label": "t:sections.footer.settings.enable_country_selector.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.footer.settings.header__4.content",
+      "info": "t:sections.footer.settings.header__4.info"
     },
     {
       "type": "checkbox",
       "id": "enable_language_selector",
       "default": true,
-      "label": "t:sections.footer.settings.enable_language_selector.label",
-      "info": "t:sections.footer.settings.enable_language_selector.info"
+      "label": "t:sections.footer.settings.enable_language_selector.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.footer.settings.header__5.content"
     },
     {
       "type": "checkbox",
@@ -486,11 +561,15 @@
       "label": "t:sections.footer.settings.payment_enable.label"
     },
     {
+      "type": "header",
+      "content": "t:sections.footer.settings.header__6.content",
+      "info": "t:sections.footer.settings.header__6.info"
+    },
+    {
       "type": "checkbox",
       "id": "show_policy",
-      "default": true,
-      "label": "t:sections.footer.settings.show_policy.label",
-      "info": "t:sections.footer.settings.show_policy.info"
+      "default": false,
+      "label": "t:sections.footer.settings.show_policy.label"
     },
     {
       "type": "header",
@@ -507,17 +586,13 @@
       "default": 0
     },
     {
-      "type": "header",
-      "content": "t:sections.all.padding.section_padding_heading"
-    },
-    {
       "type": "range",
       "id": "padding_top",
       "min": 0,
       "max": 100,
       "step": 4,
       "unit": "px",
-      "label": "t:sections.all.padding.padding_top",
+      "label": "t:sections.footer.settings.padding_top.label",
       "default": 36
     },
     {
@@ -527,7 +602,7 @@
       "max": 100,
       "step": 4,
       "unit": "px",
-      "label": "t:sections.all.padding.padding_bottom",
+      "label": "t:sections.footer.settings.padding_bottom.label",
       "default": 36
     }
   ],

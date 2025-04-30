@@ -1,0 +1,326 @@
+<div class="gift-card-balance-page page-width page-width--narrow">
+  {% if section.settings.heading != blank %}
+    <h2 class="gift-card-balance-page__heading">{{ section.settings.heading | escape }}</h2>
+  {% endif %}
+
+  {% if section.settings.description != blank %}
+    <div class="gift-card-balance-page__description rte">
+      {{ section.settings.description }}
+    </div>
+  {% endif %}
+
+  <div class="gift-card-balance-page__form-container">
+    <form id="GiftCardBalanceForm" class="gift-card-balance-page__form">
+      <div class="field">
+        <input
+          type="text"
+          id="GiftCardCode"
+          name="gift_card_code"
+          class="field__input"
+          placeholder="{{ section.settings.input_placeholder | escape }}"
+          value="{{ request.params.code }}"
+          autocomplete="off"
+          required
+        >
+        <label class="field__label" for="GiftCardCode">
+          {{ section.settings.input_label | escape }}
+        </label>
+      </div>
+
+      <button type="submit" class="button button--primary">
+        {{ section.settings.button_text | escape }}
+      </button>
+    </form>
+
+    <div id="GiftCardResult" class="gift-card-balance-page__result" style="display: none;">
+      <div id="GiftCardResultSuccess" class="gift-card-balance-page__success" style="display: none;">
+        <h3>Gift Card Balance</h3>
+        <p>Available balance: <span id="GiftCardBalance" class="gift-card-balance-page__amount"></span></p>
+        <p>Expires on: <span id="GiftCardExpiry"></span></p>
+      </div>
+
+      <div id="GiftCardResultError" class="gift-card-balance-page__error" style="display: none;">
+        <p id="GiftCardErrorMessage"></p>
+      </div>
+    </div>
+
+    <div class="gift-card-balance-page__info">
+      {% if section.settings.info_heading != blank %}
+        <h3>{{ section.settings.info_heading | escape }}</h3>
+      {% endif %}
+
+      {% if section.settings.info_text != blank %}
+        <div class="rte">
+          {{ section.settings.info_text }}
+        </div>
+      {% endif %}
+
+      <div class="gift-card-balance-page__contact">
+        {% if section.settings.contact_heading != blank %}
+          <h3>{{ section.settings.contact_heading | escape }}</h3>
+        {% endif %}
+
+        {% if section.settings.contact_text != blank %}
+          <div class="rte">
+            {{ section.settings.contact_text }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .gift-card-balance-page {
+    margin-top: 2rem;
+  }
+
+  .gift-card-balance-page__heading {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .gift-card-balance-page__description {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .gift-card-balance-page__form-container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .gift-card-balance-page__form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .gift-card-balance-page__form .field {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .gift-card-balance-page__result {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border-radius: 4px;
+  }
+
+  .gift-card-balance-page__success {
+    background-color: rgba(var(--color-success), 0.1);
+    color: rgb(var(--color-success));
+    padding: 1rem;
+    border-radius: 4px;
+  }
+
+  .gift-card-balance-page__error {
+    background-color: rgba(var(--color-error), 0.1);
+    color: rgb(var(--color-error));
+    padding: 1rem;
+    border-radius: 4px;
+  }
+
+  .gift-card-balance-page__amount {
+    font-weight: bold;
+  }
+
+  .gift-card-balance-page__info {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(var(--color-foreground), 0.08);
+  }
+
+  .gift-card-balance-page__contact {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: rgba(var(--color-foreground), 0.04);
+    border-radius: 4px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .gift-card-balance-page__form {
+      flex-direction: column;
+    }
+
+    .gift-card-balance-page__form .button {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('GiftCardBalanceForm');
+    const resultContainer = document.getElementById('GiftCardResult');
+    const successContainer = document.getElementById('GiftCardResultSuccess');
+    const errorContainer = document.getElementById('GiftCardResultError');
+    const errorMessage = document.getElementById('GiftCardErrorMessage');
+    const balanceElement = document.getElementById('GiftCardBalance');
+    const expiryElement = document.getElementById('GiftCardExpiry');
+    const giftCardInput = document.getElementById('GiftCardCode');
+
+    // Check if there's a code in the URL and show appropriate message
+    if (giftCardInput && giftCardInput.value) {
+      // Simulate checking the gift card
+      setTimeout(() => {
+        showError(
+          'To check your gift card balance, please contact our customer service team or visit a store location.'
+        );
+      }, 500);
+    }
+
+    if (form) {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const giftCardCode = giftCardInput.value.trim();
+
+        if (!giftCardCode) {
+          showError('Please enter a gift card code.');
+          return;
+        }
+
+        // Since we don't have a real API endpoint, show a helpful message instead
+        showError(
+          'To check your gift card balance, please contact our customer service team or visit a store location.'
+        );
+      });
+    }
+
+    function showError(message) {
+      if (resultContainer && errorContainer) {
+        resultContainer.style.display = 'block';
+        errorContainer.style.display = 'block';
+
+        if (successContainer) {
+          successContainer.style.display = 'none';
+        }
+
+        if (errorMessage) {
+          errorMessage.textContent = message;
+        }
+      }
+    }
+
+    function showSuccess(balance, expiry) {
+      if (resultContainer && successContainer) {
+        resultContainer.style.display = 'block';
+        successContainer.style.display = 'block';
+
+        if (errorContainer) {
+          errorContainer.style.display = 'none';
+        }
+
+        // Format the balance as currency
+        if (balanceElement) {
+          const formattedBalance = formatMoney(balance);
+          balanceElement.textContent = formattedBalance;
+        }
+
+        // Format the expiry date if available
+        if (expiry && expiryElement) {
+          const expiryDate = new Date(expiry);
+          expiryElement.textContent = expiryDate.toLocaleDateString();
+        }
+      }
+    }
+
+    function formatMoney(cents) {
+      if (typeof cents === 'string') {
+        cents = cents.replace('.', '');
+      }
+
+      const value = parseInt(cents, 10);
+
+      try {
+        const formatter = new Intl.NumberFormat(document.documentElement.lang || 'en', {
+          style: 'currency',
+          currency: document.querySelector('meta[property="og:price:currency"]')?.content || 'USD',
+          minimumFractionDigits: 2,
+        });
+
+        return formatter.format(value / 100);
+      } catch (e) {
+        console.error('Error formatting money:', e);
+        return '$' + (value / 100).toFixed(2);
+      }
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Gift Card Balance Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Check Gift Card Balance",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "default": "<p>Enter your gift card code below to check your available balance.</p>",
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "input_label",
+      "default": "Gift Card Code",
+      "label": "Input label"
+    },
+    {
+      "type": "text",
+      "id": "input_placeholder",
+      "default": "Enter gift card code",
+      "label": "Input placeholder"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "default": "Check Balance",
+      "label": "Button text"
+    },
+    {
+      "type": "header",
+      "content": "Information Section"
+    },
+    {
+      "type": "text",
+      "id": "info_heading",
+      "default": "How to Check Your Gift Card Balance",
+      "label": "Information heading"
+    },
+    {
+      "type": "richtext",
+      "id": "info_text",
+      "default": "<ol><li>Enter your gift card number in the field above</li><li>Click \"Check Balance\" to see your available balance</li><li>If you have any issues, please contact our customer service team</li></ol>",
+      "label": "Information text"
+    },
+    {
+      "type": "header",
+      "content": "Contact Section"
+    },
+    {
+      "type": "text",
+      "id": "contact_heading",
+      "default": "Need Help?",
+      "label": "Contact heading"
+    },
+    {
+      "type": "richtext",
+      "id": "contact_text",
+      "default": "<p>Contact our customer service team:</p><p>Email: support@example.com</p><p>Phone: 1-800-123-4567</p>",
+      "label": "Contact text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gift Card Balance Page"
+    }
+  ]
+}
+{% endschema %}

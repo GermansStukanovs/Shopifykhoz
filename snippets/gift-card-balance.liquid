@@ -1,0 +1,16 @@
+<div class="gift-card-balance-snippet">
+  {% render 'gift-card-balance-form',
+    title: title,
+    description: description,
+    button_text: button_text,
+    input_label: input_label,
+    input_placeholder: input_placeholder,
+    text_alignment: text_alignment
+  %}
+</div>
+
+<style>
+  .gift-card-balance-snippet {
+    margin: {{ margin_top | default: '0' }}px 0 {{ margin_bottom | default: '0' }}px 0;
+  }
+</style>

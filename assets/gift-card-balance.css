@@ -1,0 +1,116 @@
+.gift-card-balance {
+    padding: 40px 0;
+  }
+  
+  .gift-card-balance__container {
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .gift-card-balance__heading {
+    margin-bottom: 1.5rem;
+    font-size: calc(var(--font-heading-scale) * 2.4rem);
+  }
+  
+  .gift-card-balance__description {
+    margin-bottom: 2rem;
+    font-size: 1.6rem;
+    line-height: 1.6;
+  }
+  
+  .gift-card-balance__form-wrapper {
+    margin-bottom: 2rem;
+  }
+  
+  .gift-card-balance__form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+  }
+  
+  .gift-card-balance__form .field {
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .gift-card-balance__result {
+    margin-top: 2rem;
+    border-radius: 4px;
+  }
+  
+  .gift-card-balance__success {
+    background-color: rgba(var(--color-success), 0.1);
+    color: rgb(var(--color-foreground));
+    padding: 1.5rem;
+    border-radius: 4px;
+    border-left: 4px solid rgb(var(--color-success));
+  }
+  
+  .gift-card-balance__error {
+    background-color: rgba(var(--color-error), 0.1);
+    color: rgb(var(--color-foreground));
+    padding: 1.5rem;
+    border-radius: 4px;
+    border-left: 4px solid rgb(var(--color-error));
+  }
+  
+  .gift-card-balance__amount {
+    font-weight: bold;
+    color: rgb(var(--color-success));
+  }
+  
+  .gift-card-balance__loading {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0;
+  }
+  
+  .gift-card-balance__loading .spinner {
+    width: 3rem;
+    height: 3rem;
+    animation: rotate 1s linear infinite;
+  }
+  
+  .gift-card-balance__loading .path {
+    stroke: rgb(var(--color-foreground));
+    stroke-linecap: round;
+    animation: dash 1.5s ease-in-out infinite;
+  }
+  
+  @keyframes rotate {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  @keyframes dash {
+    0% {
+      stroke-dasharray: 1, 150;
+      stroke-dashoffset: 0;
+    }
+    50% {
+      stroke-dasharray: 90, 150;
+      stroke-dashoffset: -35;
+    }
+    100% {
+      stroke-dasharray: 90, 150;
+      stroke-dashoffset: -124;
+    }
+  }
+  
+  @media screen and (max-width: 749px) {
+    .gift-card-balance__form {
+      flex-direction: column;
+    }
+  
+    .gift-card-balance__form .button {
+      width: 100%;
+    }
+  
+    .gift-card-balance__heading {
+      font-size: calc(var(--font-heading-scale) * 2rem);
+    }
+  }
+  
