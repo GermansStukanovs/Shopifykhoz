@@ -62,13 +62,11 @@ class GiftCardBalanceChecker {
       this.errorContainer.style.display = 'none';
     }
 
-    // Format the balance as currency
     if (this.balanceElement) {
       const formattedBalance = this.formatMoney(balance);
       this.balanceElement.textContent = formattedBalance;
     }
 
-    // Format the expiry date if available
     if (expiry && this.expiryElement) {
       const expiryDate = new Date(expiry);
       this.expiryElement.textContent = expiryDate.toLocaleDateString();
@@ -98,7 +96,6 @@ class GiftCardBalanceChecker {
     const value = Number.parseInt(cents, 10);
 
     try {
-      // Try to use the Shopify money format if available
       if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
         return Shopify.formatMoney(value);
       }
@@ -106,7 +103,6 @@ class GiftCardBalanceChecker {
       console.error('Error using Shopify.formatMoney:', e);
     }
 
-    // Fallback to Intl.NumberFormat
     try {
       const formatter = new Intl.NumberFormat(document.documentElement.lang || 'en', {
         style: 'currency',
@@ -117,7 +113,6 @@ class GiftCardBalanceChecker {
       return formatter.format(value / 100);
     } catch (e) {
       console.error('Error formatting money with Intl.NumberFormat:', e);
-      // Very basic fallback
       return '$' + (value / 100).toFixed(2);
     }
   }
@@ -125,7 +120,6 @@ class GiftCardBalanceChecker {
   checkGiftCardBalance(code) {
     this.showLoading();
 
-    // Use the Shopify AJAX API to check the gift card balance
     fetch('/apps/gift-cards/check-balance', {
       method: 'POST',
       headers: {
@@ -158,7 +152,6 @@ class GiftCardBalanceChecker {
   }
 }
 
-// Initialize all gift card balance checkers on the page
 document.addEventListener('DOMContentLoaded', () => {
   const giftCardBalanceContainers = document.querySelectorAll('.gift-card-balance');
 
@@ -167,7 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Support for Shopify's section rendering
 document.addEventListener('shopify:section:load', (event) => {
   const container = event.target.querySelector('.gift-card-balance');
 
