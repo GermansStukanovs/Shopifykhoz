@@ -506,3 +506,261 @@
     }
   }
 }
+.footer-block__gift-card-balance {
+  margin-top: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.gift-card-balance-checker__form {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.gift-card-balance-checker__input-wrap {
+  flex-grow: 1;
+  position: relative;
+}
+
+.gift-card-balance-checker__input {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  font-size: 15px;
+  border: none;
+  border-radius: 10px;
+  background-color: #f5f5f7;
+  transition: all 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.gift-card-balance-checker__input:focus {
+  outline: none;
+  background-color: #fff;
+}
+
+.gift-card-balance-checker__button {
+  min-width: 120px;
+  height: 44px;
+  padding: 0 15px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  background: linear-gradient(to right, #000000, #333333);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.gift-card-balance-checker__button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.gift-card-balance-checker__button:active {
+  transform: scale(0.98);
+}
+
+.gift-card-balance-checker__button:disabled {
+  opacity: 0.7;
+  transform: none;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.gift-card-balance-checker__spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  animation: spin 0.8s linear infinite;
+  margin-left: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.gift-card-balance-checker__result {
+  margin-top: 15px;
+  transition: all 0.3s ease;
+  opacity: 0;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gift-card-balance-checker__card {
+  background-color: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.gift-card-balance-checker__card-header {
+  padding: 15px;
+  background: linear-gradient(to right, #000000, #333333);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.gift-card-balance-checker__card-header::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.12), transparent 60%);
+}
+
+.gift-card-balance-checker__card-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  position: relative;
+  z-index: 1;
+}
+
+.gift-card-balance-checker__card-content {
+  padding: 18px;
+}
+
+.gift-card-balance-checker__card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.gift-card-balance-checker__card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.gift-card-balance-checker__card-row:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.gift-card-balance-checker__card-label {
+  font-weight: 500;
+  color: #86868b;
+  font-size: 14px;
+}
+
+.gift-card-balance-checker__card-balance {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1d1d1f;
+  letter-spacing: -0.02em;
+}
+
+.gift-card-balance-checker__card-number {
+  font-family: monospace;
+  font-size: 15px;
+  letter-spacing: 0.03em;
+  color: #1d1d1f;
+}
+
+.gift-card-balance-checker__card-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 20px;
+}
+
+.gift-card-balance-checker__card-status::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.gift-card-balance-checker__card-status.active {
+  background-color: #e4f8ed;
+  color: #1d893c;
+}
+
+.gift-card-balance-checker__card-status.active::before {
+  background-color: #34c759;
+  box-shadow: 0 0 0 1px rgba(52, 199, 89, 0.2);
+}
+
+.gift-card-balance-checker__card-status.inactive {
+  background-color: #fef7e6;
+  color: #b9840d;
+}
+
+.gift-card-balance-checker__card-status.inactive::before {
+  background-color: #ff9f0a;
+  box-shadow: 0 0 0 1px rgba(255, 159, 10, 0.2);
+}
+
+.gift-card-balance-checker__error {
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 10px;
+  background-color: #fef1f2;
+  border: 1px solid #feecee;
+  display: flex;
+  align-items: flex-start;
+}
+
+.gift-card-balance-checker__error::before {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 16px;
+  background-color: #ff3b30;
+  border-radius: 50%;
+  margin-right: 8px;
+  flex-shrink: 0;
+  position: relative;
+  top: 1px;
+}
+
+.gift-card-balance-checker__error-message {
+  color: #95353c;
+  margin: 0;
+  font-size: 14px;
+}
+
+@media screen and (max-width: 749px) {
+  .gift-card-balance-checker__form {
+    flex-direction: column;
+  }
+
+  .gift-card-balance-checker__button {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
