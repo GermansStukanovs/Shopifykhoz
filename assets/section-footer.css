@@ -561,8 +561,8 @@
 }
 
 .gift-card-balance-checker__button:hover {
-  transform: scale(1.02);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(to right, #393939, #555555);
 }
 
 .gift-card-balance-checker__button:active {
@@ -642,6 +642,7 @@
   letter-spacing: -0.01em;
   position: relative;
   z-index: 1;
+  color: #fff;
 }
 
 .gift-card-balance-checker__card-content {
