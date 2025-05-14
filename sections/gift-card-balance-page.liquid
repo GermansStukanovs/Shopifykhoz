@@ -10,38 +10,69 @@
   {% endif %}
 
   <div class="gift-card-balance-page__form-container">
-    <form id="GiftCardBalanceForm" class="gift-card-balance-page__form">
-      <div class="field">
-        <input
-          type="text"
-          id="GiftCardCode"
-          name="gift_card_code"
-          class="field__input"
-          placeholder="{{ section.settings.input_placeholder | escape }}"
-          value="{{ request.params.code }}"
-          autocomplete="off"
-          required
-        >
-        <label class="field__label" for="GiftCardCode">
+    <div class="gift-card-balance-checker__form">
+      <div class="gift-card-balance-checker__input-wrap">
+        <label for="gift-card-code" class="visually-hidden">
           {{ section.settings.input_label | escape }}
         </label>
+        <input
+          type="text"
+          id="gift-card-code"
+          class="gift-card-balance-checker__input"
+          placeholder="{{ section.settings.input_placeholder | escape }}"
+          aria-label="{{ section.settings.input_label | escape }}"
+        >
       </div>
 
-      <button type="submit" class="button button--primary">
-        {{ section.settings.button_text | escape }}
+      <button
+        type="button"
+        class="gift-card-balance-checker__button"
+        id="check-balance-button"
+        style="background-color: #000000; color: white;"
+      >
+        <span id="button-text">{{ section.settings.button_text | escape }}</span>
+        <span
+          id="button-loading"
+          class="gift-card-balance-checker__spinner"
+          style="display: none;"
+        ></span>
       </button>
-    </form>
+    </div>
 
-    <div id="GiftCardResult" class="gift-card-balance-page__result" style="display: none;">
-      <div id="GiftCardResultSuccess" class="gift-card-balance-page__success" style="display: none;">
-        <h3>Gift Card Balance</h3>
-        <p>Available balance: <span id="GiftCardBalance" class="gift-card-balance-page__amount"></span></p>
-        <p>Expires on: <span id="GiftCardExpiry"></span></p>
+    <div
+      id="gift-card-result"
+      class="gift-card-balance-checker__result"
+      style="display: none;"
+    >
+      <div class="gift-card-balance-checker__card">
+        <div class="gift-card-balance-checker__card-header">
+          <h3 class="gift-card-balance-checker__card-title">Gift Card Balance</h3>
+        </div>
+        <div class="gift-card-balance-checker__card-content">
+          <div class="gift-card-balance-checker__card-info">
+            <div class="gift-card-balance-checker__card-row">
+              <span class="gift-card-balance-checker__card-label">Card Number:</span>
+              <span class="gift-card-balance-checker__card-number"></span>
+            </div>
+            <div class="gift-card-balance-checker__card-row">
+              <span class="gift-card-balance-checker__card-label">Balance:</span>
+              <span class="gift-card-balance-checker__card-balance"></span>
+            </div>
+            <div class="gift-card-balance-checker__card-row">
+              <span class="gift-card-balance-checker__card-label">Status:</span>
+              <span class="gift-card-balance-checker__card-status"></span>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
 
-      <div id="GiftCardResultError" class="gift-card-balance-page__error" style="display: none;">
-        <p id="GiftCardErrorMessage"></p>
-      </div>
+    <div
+      id="gift-card-error"
+      class="gift-card-balance-checker__error"
+      style="display: none;"
+    >
+      <p class="gift-card-balance-checker__error-message"></p>
     </div>
 
     <div class="gift-card-balance-page__info">
@@ -90,40 +121,114 @@
     margin: 0 auto;
   }
 
-  .gift-card-balance-page__form {
+  .gift-card-balance-checker__form {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
     margin-bottom: 2rem;
   }
 
-  .gift-card-balance-page__form .field {
+  .gift-card-balance-checker__input-wrap {
     flex: 1;
     min-width: 200px;
   }
 
-  .gift-card-balance-page__result {
-    margin: 2rem 0;
-    padding: 1.5rem;
-    border-radius: 4px;
-  }
-
-  .gift-card-balance-page__success {
-    background-color: rgba(var(--color-success), 0.1);
-    color: rgb(var(--color-success));
+  .gift-card-balance-checker__input {
+    width: 100%;
     padding: 1rem;
+    border: 1px solid rgba(var(--color-foreground), 0.15);
     border-radius: 4px;
+    font-size: 1.6rem;
   }
 
-  .gift-card-balance-page__error {
+  .gift-card-balance-checker__button {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 15rem;
+  }
+
+  .gift-card-balance-checker__spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .gift-card-balance-checker__result {
+    margin: 2rem 0;
+  }
+
+  .gift-card-balance-checker__card {
+    border: 1px solid rgba(var(--color-foreground), 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .gift-card-balance-checker__card-header {
+    background-color: rgba(var(--color-foreground), 0.05);
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(var(--color-foreground), 0.08);
+  }
+
+  .gift-card-balance-checker__card-title {
+    margin: 0;
+    font-size: 1.8rem;
+  }
+
+  .gift-card-balance-checker__card-content {
+    padding: 1.5rem;
+  }
+
+  .gift-card-balance-checker__card-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(var(--color-foreground), 0.08);
+  }
+
+  .gift-card-balance-checker__card-row:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .gift-card-balance-checker__card-label {
+    font-weight: bold;
+    color: rgba(var(--color-foreground), 0.75);
+  }
+
+  .gift-card-balance-checker__card-balance {
+    font-weight: bold;
+  }
+
+  .gift-card-balance-checker__error {
     background-color: rgba(var(--color-error), 0.1);
     color: rgb(var(--color-error));
-    padding: 1rem;
+    padding: 1.5rem;
     border-radius: 4px;
+    margin: 2rem 0;
+    display: flex;
+    align-items: center;
   }
 
-  .gift-card-balance-page__amount {
-    font-weight: bold;
+  .gift-card-balance-checker__error-message {
+    margin: 0;
   }
 
   .gift-card-balance-page__info {
@@ -140,11 +245,11 @@
   }
 
   @media screen and (max-width: 749px) {
-    .gift-card-balance-page__form {
+    .gift-card-balance-checker__form {
       flex-direction: column;
     }
 
-    .gift-card-balance-page__form .button {
+    .gift-card-balance-checker__button {
       width: 100%;
     }
   }
@@ -152,100 +257,126 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('GiftCardBalanceForm');
-    const resultContainer = document.getElementById('GiftCardResult');
-    const successContainer = document.getElementById('GiftCardResultSuccess');
-    const errorContainer = document.getElementById('GiftCardResultError');
-    const errorMessage = document.getElementById('GiftCardErrorMessage');
-    const balanceElement = document.getElementById('GiftCardBalance');
-    const expiryElement = document.getElementById('GiftCardExpiry');
-    const giftCardInput = document.getElementById('GiftCardCode');
+    const checkBalanceButton = document.getElementById('check-balance-button');
+    const buttonText = document.getElementById('button-text');
+    const buttonLoading = document.getElementById('button-loading');
+    const giftCardInput = document.getElementById('gift-card-code');
+    const resultDiv = document.getElementById('gift-card-result');
+    const errorDiv = document.getElementById('gift-card-error');
+    const cardNumber = resultDiv.querySelector('.gift-card-balance-checker__card-number');
+    const cardBalance = resultDiv.querySelector('.gift-card-balance-checker__card-balance');
+    const cardStatus = resultDiv.querySelector('.gift-card-balance-checker__card-status');
+    const errorMessage = errorDiv.querySelector('.gift-card-balance-checker__error-message');
 
-    // Check if there's a code in the URL and show appropriate message
-    if (giftCardInput && giftCardInput.value) {
-      // Simulate checking the gift card
+    // Check if there's a code in the URL and auto-check it
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('code')) {
+      giftCardInput.value = urlParams.get('code');
+      // Trigger the balance check
       setTimeout(() => {
-        showError(
-          'To check your gift card balance, please contact our customer service team or visit a store location.'
-        );
+        checkBalanceButton.click();
       }, 500);
     }
 
-    if (form) {
-      form.addEventListener('submit', function (event) {
-        event.preventDefault();
+    checkBalanceButton.addEventListener('click', async function () {
+      const code = giftCardInput.value.trim();
 
-        const giftCardCode = giftCardInput.value.trim();
+      if (!code) {
+        showError('Please enter a gift card code');
+        return;
+      }
 
-        if (!giftCardCode) {
-          showError('Please enter a gift card code.');
+      try {
+        // Show loading state
+        setLoadingState(true);
+
+        const response = await fetch('{{ section.settings.api_endpoint }}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Shop-Domain': '{{ shop.domain }}',
+          },
+          body: JSON.stringify({ giftCardNumber: code }),
+        });
+
+        console.log('Response status:', response.status);
+        const data = await response.json();
+        console.log('Response data:', data);
+
+        if (!response.ok) {
+          showError(data.error || 'An error occurred while checking the balance');
           return;
         }
 
-        // Since we don't have a real API endpoint, show a helpful message instead
-        showError(
-          'To check your gift card balance, please contact our customer service team or visit a store location.'
-        );
-      });
+        if (!data.balance || !data.currencyCode) {
+          showError('Invalid gift card data received');
+          return;
+        }
+
+        // Format the card number (mask all but last 4 digits)
+        const formattedCardNumber = formatCardNumber(code);
+
+        // Update card details
+        cardNumber.textContent = formattedCardNumber;
+        cardBalance.textContent = formatCurrency(data.balance, data.currencyCode);
+
+        // Update status with appropriate styling
+        const status = data.status || 'active';
+        cardStatus.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+        cardStatus.className = 'gift-card-balance-checker__card-status ' + status.toLowerCase();
+
+        // Show result
+        resultDiv.style.display = 'block';
+        errorDiv.style.display = 'none';
+      } catch (error) {
+        console.error('Error checking balance:', error);
+        showError('An error occurred while checking the balance. Please try again later.');
+      } finally {
+        // Reset loading state
+        setLoadingState(false);
+      }
+    });
+
+    // Handle Enter key press
+    giftCardInput.addEventListener('keypress', function (event) {
+      if (event.key === 'Enter') {
+        checkBalanceButton.click();
+      }
+    });
+
+    function setLoadingState(isLoading) {
+      checkBalanceButton.disabled = isLoading;
+      buttonText.style.display = isLoading ? 'none' : 'inline';
+      buttonLoading.style.display = isLoading ? 'inline-block' : 'none';
     }
 
     function showError(message) {
-      if (resultContainer && errorContainer) {
-        resultContainer.style.display = 'block';
-        errorContainer.style.display = 'block';
-
-        if (successContainer) {
-          successContainer.style.display = 'none';
-        }
-
-        if (errorMessage) {
-          errorMessage.textContent = message;
-        }
-      }
+      resultDiv.style.display = 'none';
+      errorDiv.style.display = 'flex';
+      errorMessage.textContent = message;
     }
 
-    function showSuccess(balance, expiry) {
-      if (resultContainer && successContainer) {
-        resultContainer.style.display = 'block';
-        successContainer.style.display = 'block';
+    function formatCardNumber(cardNumber) {
+      if (!cardNumber) return '';
 
-        if (errorContainer) {
-          errorContainer.style.display = 'none';
-        }
+      // Only show last 4 digits
+      const length = cardNumber.length;
+      if (length <= 4) return cardNumber;
 
-        // Format the balance as currency
-        if (balanceElement) {
-          const formattedBalance = formatMoney(balance);
-          balanceElement.textContent = formattedBalance;
-        }
+      const lastFour = cardNumber.slice(-4);
+      const maskedPart = '•'.repeat(length - 4);
 
-        // Format the expiry date if available
-        if (expiry && expiryElement) {
-          const expiryDate = new Date(expiry);
-          expiryElement.textContent = expiryDate.toLocaleDateString();
-        }
-      }
+      // Format with spaces for readability
+      return `${maskedPart} ${lastFour}`;
     }
 
-    function formatMoney(cents) {
-      if (typeof cents === 'string') {
-        cents = cents.replace('.', '');
-      }
-
-      const value = parseInt(cents, 10);
-
-      try {
-        const formatter = new Intl.NumberFormat(document.documentElement.lang || 'en', {
-          style: 'currency',
-          currency: document.querySelector('meta[property="og:price:currency"]')?.content || 'USD',
-          minimumFractionDigits: 2,
-        });
-
-        return formatter.format(value / 100);
-      } catch (e) {
-        console.error('Error formatting money:', e);
-        return '$' + (value / 100).toFixed(2);
-      }
+    function formatCurrency(amount, currencyCode) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currencyCode || 'USD',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(amount);
     }
   });
 </script>
@@ -315,6 +446,12 @@
       "id": "contact_text",
       "default": "<p>Contact our customer service team:</p><p>Email: support@example.com</p><p>Phone: 1-800-123-4567</p>",
       "label": "Contact text"
+    },
+    {
+      "type": "text",
+      "id": "api_endpoint",
+      "default": "https://stuger-gift-card.onrender.com/api/public/check-gift-card",
+      "label": "API Endpoint"
     }
   ],
   "presets": [

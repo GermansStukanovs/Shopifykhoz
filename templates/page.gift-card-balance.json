@@ -18,7 +18,8 @@
         "contact_heading": "Need Help?",
         "contact_text": "<p>Contact our customer service team:</p><p>Email: support@example.com</p><p>Phone: 1-800-123-4567</p>",
         "info_heading": "How to Check Your Gift Card Balance",
-        "info_text": "<ol><li>Enter your gift card number in the field above</li><li>Click \"Check Balance\" to see your available balance</li><li>If you have any issues, please contact our customer service team</li></ol>"
+        "info_text": "<ol><li>Enter your gift card number in the field above</li><li>Click \"Check Balance\" to see your available balance</li><li>If you have any issues, please contact our customer service team</li></ol>",
+        "api_endpoint": "https://stuger-gift-card.onrender.com/api/public/check-gift-card"
       }
     }
   },
