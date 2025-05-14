@@ -30,7 +30,7 @@
         "contact_text": "<p>Contact our customer service team:</p><p>Email: support@example.com</p><p>Phone: 1-800-123-4567</p>"
       }
     },
-    "gift_card_balance_ffG67J": {
+    "gift_card_balance_Cb3Dkd": {
       "type": "gift-card-balance",
       "name": "Gift Card Balance",
       "settings": {
@@ -58,6 +58,6 @@
   "order": [
     "main",
     "gift-card-balance-page",
-    "gift_card_balance_ffG67J"
+    "gift_card_balance_Cb3Dkd"
   ]
 }
