@@ -54,6 +54,18 @@
         "padding_bottom": 20
       }
     },
+    "gift_card_balance_checker_UmWxMz": {
+      "type": "gift-card-balance-checker",
+      "name": "Gift Card Balance Checker",
+      "settings": {
+        "title": "Check Gift Card Balance",
+        "subtitle": "Enter your gift card number to check your available balance",
+        "button_text": "Check Balance",
+        "placeholder": "Enter gift card code",
+        "background_color": "#f8f8f8",
+        "accent_color": "#000000"
+      }
+    },
     "gift_card_balance_wbQVMP": {
       "type": "gift-card-balance",
       "name": "Gift Card Balance",
@@ -82,6 +94,7 @@
   "order": [
     "announcement-bar",
     "header",
+    "gift_card_balance_checker_UmWxMz",
     "gift_card_balance_wbQVMP"
   ]
 }
