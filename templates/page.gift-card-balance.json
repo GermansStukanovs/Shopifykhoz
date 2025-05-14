@@ -26,32 +26,7 @@
         "button_text": "Check Balance",
         "info_heading": "How to Check Your Gift Card Balance",
         "info_text": "<ol><li>Enter your gift card number in the field above</li><li>Click \"Check Balance\" to see your available balance</li><li>If you have any issues, please contact our customer service team</li></ol>",
-        "contact_heading": "Need Help?",
-        "contact_text": "<p>Contact our customer service team:</p><p>Email: support@example.com</p><p>Phone: 1-800-123-4567</p>"
-      }
-    },
-    "gift_card_balance_Cb3Dkd": {
-      "type": "gift-card-balance",
-      "name": "Gift Card Balance",
-      "settings": {
-        "title": "Check Gift Card Balance",
-        "description": "<p>Enter your gift card code to check the available balance.</p>",
-        "input_label": "Gift Card Code",
-        "input_placeholder": "Enter gift card code",
-        "button_text": "Check Balance",
-        "success_heading": "Gift Card Balance",
-        "balance_text": "Available balance:",
-        "show_expiry": true,
-        "expiry_text": "Expires on:",
-        "error_text": "Unable to find gift card. Please check the code and try again.",
-        "empty_code_error": "Please enter a gift card code.",
-        "network_error": "Network error. Please try again later.",
-        "unknown_error": "An unknown error occurred. Please try again later.",
-        "text_alignment": "center",
-        "content_width": 650,
-        "color_scheme": "",
-        "padding_top": 40,
-        "padding_bottom": 40
+        "api_endpoint": "https://stuger-gift-card.onrender.com/api/public/check-gift-card"
       }
     }
   },
